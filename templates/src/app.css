@@ -1,0 +1,6 @@
+.App-p{
+	font-size: 100px;
+	padding-left: 50px;
+	transform: translate(10%,10%);
+	display: flex;
+}
