@@ -5,6 +5,7 @@ const chalk = require('chalk');
 const fs = require('fs-extra');
 const spawn = require('cross-spawn');
 const inquirer = require('inquirer');
+const execSync = require('child_process').execSync;
 
 const packageJson = require('./package.json');
 const questions = require('./lib/user-config.js');
@@ -155,18 +156,26 @@ function generatePackageJson(name,version,description,author,license) {
  * @return {[type]} [description]
  */
 function install() {
-	//使用npm时必须要改变路径
-	process.chdir(root);
+	if(shouldUseYarn()){
+		installUseYarn();
+	}else{
+		installUseNpm();
+	}
+}
+/**
+ * [使用yarn安装]
+ * @return {[type]} [description]
+ */
+function installUseYarn(){
 
 	console.log();
 	console.log('Installing dependencies packages. This might take a couple of minutes.');
 	console.log(`Installing ${chalk.cyan('react')} and ${chalk.cyan('react-dom')}.`);
-	console.log();
+	console.log()
 
-	const child = spawn('npm', ['install', '-S', '--save-exact', '--loglevel', 'error'].concat(getDependencies()), {
+	const child = spawn('yarnpkg', ['add'].concat(getDependencies()).concat(['--cwd', root]).concat(['--registry','https://registry.npm.taobao.org']), {
 		stdio: 'inherit'
 	});
-	
 	child.on('close', function(code) {
 		if(code !== 0) {
 			console.log(chalk.red('Error occured while installing dependencies!'));
@@ -178,7 +187,63 @@ function install() {
 			console.log(`Installing ${chalk.cyan('webpack')}, ${chalk.cyan('webpack-dev-server')} and ${chalk.cyan('babel-core')}...`);
 			console.log()
 
-			const child = spawn('npm', ['install', '-D', '--save-exact', '--loglevel', 'error'].concat(getDevDependencies()), {
+			const child = spawn('yarnpkg', ['add', '--dev'].concat(getDevDependencies()).concat(['--cwd', root]).concat(['--registry','https://registry.npm.taobao.org']), {
+				stdio: 'inherit'
+			})
+			child.on('close', function(code) {
+				if(code !== 0) {
+					console.log(chalk.red('Error occured while installing dependencies!'));
+					process.exit(1);
+				}
+				else {
+					console.log();
+					console.log(`Success! Created app at ${root}`);
+					console.log('Inside that directory, you can run several commands:')
+					console.log();
+					console.log(chalk.cyan('  yarn start'))
+					console.log('    Starts the development server.');
+					console.log();
+					console.log(chalk.cyan('  yarn build'));
+					console.log('    Bundles the app into static files for production.');
+					console.log();
+					console.log('We suggest that you begin by typing:')
+					console.log();
+					console.log(chalk.cyan(`  cd ${projectName}`));
+					console.log(chalk.cyan('  yarn start'));
+				}
+			})
+		}
+	});
+}
+/**
+ * [使用npm安装]
+ * @return {[type]} [description]
+ */
+function installUseNpm(){
+
+	//使用npm时必须要改变路径
+	process.chdir(root);
+
+	console.log();
+	console.log('Installing dependencies packages. This might take a couple of minutes.');
+	console.log(`Installing ${chalk.cyan('react')} and ${chalk.cyan('react-dom')}.`);
+	console.log();
+
+	const child = spawn('npm', ['install', '-S'].concat(getDependencies()).concat(['--loglevel','error']).concat(['--registry','https://registry.npm.taobao.org']), {
+		stdio: 'inherit'
+	});
+	child.on('close', function(code) {
+		if(code !== 0) {
+			console.log(chalk.red('Error occured while installing dependencies!'));
+			process.exit(1);
+		}
+		else {
+			console.log();
+			console.log('Installing devDependencies packages. This might take a couple of minutes.');
+			console.log(`Installing ${chalk.cyan('webpack')}, ${chalk.cyan('webpack-dev-server')} and ${chalk.cyan('babel-core')}...`);
+			console.log()
+
+			const child = spawn('npm', ['install', '-D'].concat(getDevDependencies()).concat(['--loglevel','error']).concat(['--registry','https://registry.npm.taobao.org']), {
 				stdio: 'inherit'
 			})
 			child.on('close', function(code) {
@@ -212,7 +277,7 @@ function install() {
  */
 function shouldUseYarn() {
   try {
-	execSync('yarnpkg --version', { stdio: 'ignore' });
+	execSync('yarn --version', { stdio: 'ignore' });
 	return true;
   } catch (e) {
 	return false;
@@ -224,9 +289,9 @@ function shouldUseYarn() {
  * @return {[type]}         [description]
  */
 function printValidationResults(results) {
-  if (typeof results !== 'undefined') {
-	results.forEach(error => {
-	  console.error(chalk.red(`  *  ${error}`));
-	});
-  }
+  	if (typeof results !== 'undefined') {
+		results.forEach(error => {
+	  		console.error(chalk.red(`  *  ${error}`));
+	  	});
+	};
 }

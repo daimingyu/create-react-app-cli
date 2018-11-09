@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app.js';
+import './index.css';
+import imgURL from './logo.svg';
 
-if (process.env.NODE_ENV !== 'production') {
-  console.log('Looks like we are in development mode!!!!');
-}
-
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+	<div className="App">
+		    <img className="App-img" src={ imgURL } />
+		    <p className="App-p">React-APP</p>
+	</div>
+, document.getElementById('root'));
