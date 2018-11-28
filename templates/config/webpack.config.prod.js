@@ -12,26 +12,27 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require('path');
+const { root, entryPath, buildPath, templPath, publicPath, jsRegex, cssRegex, imageRegex, fontRegex } = require('./webpack.config.variable.js');
 
 module.exports = {
     mode: 'production',
     entry: {
-        main: './src/index.js'
+        main: entryPath
     },
     output: {
         filename: "static/js/[name].[chunkhash:16].js",
-        path: path.resolve(__dirname, '../build')
+        path: buildPath
     },
     module: {
         rules: [
             {
-                test: /\.(js|jsx)?$/,
+                test: jsRegex,
                 use: "babel-loader",
                 exclude: /node_modules/
             },
             {
                 // test 表示测试什么文件类型
-                test:/\.css$/,
+                test: cssRegex,
                 // 使用 'style-loader','css-loader'
                 use:[
                     MiniCssExtractPlugin.loader,
@@ -60,7 +61,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|svg|jpg|gif|jpeg)$/, 
+                test: imageRegex, 
                 use:[
                     {
                         loader: 'url-loader',
@@ -74,7 +75,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/, 
+                test: fontRegex, 
                 use:[
                     {
                         loader: 'file-loader',
@@ -104,19 +105,19 @@ module.exports = {
     plugins: [
         //删除build文件夹
         new CleanWebpackPlugin(['build'],{
-            root: path.resolve(__dirname, '../'), //指定根目录
+            root: root, //指定根目录
             verbose: false,
             dry: false
         }),
         //将public文件夹下的内容都复制到build下
         new CopyWebpackPlugin([{
-            from: "./public",
+            from: publicPath,
             to: "",
             force: true
         }]),
         //根据模板自动添加 link script
         new HtmlWebpackPlugin({
-            template: 'public/index.html',
+            template: templPath,
             inject: 'body',
             minify: {
                 html5: true
@@ -128,7 +129,6 @@ module.exports = {
           // Options similar to the same options in webpackOptions.output
           // both options are optional
           filename: "static/css/[name].[chunkhash:16].css",
-          chunkFilename: "[id].css"
         })
     ],
     stats: {

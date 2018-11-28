@@ -1,5 +1,5 @@
 /**
- * @component webpack.dev.js
+ * @component webpack.config.dev.js
  * @description 开发环境
  * @time 2018/3/8
  * @author **
@@ -8,11 +8,12 @@ const path = require('path');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const { entryPath, templPath, publicPath, jsRegex, cssRegex, imageRegex, fontRegex } = require('./webpack.config.variable.js');
 
 module.exports = {
     mode: 'development',
     entry: {
-        app: './src/index.js'
+        app: entryPath
     },
     output: {
         filename: "js/[name].[hash:16].js",
@@ -20,13 +21,13 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx)?$/,
+                test: jsRegex,
                 use: "babel-loader",
                 exclude: /node_modules/
             },
             {
                 // test 表示测试什么文件类型
-                test:/\.css$/,
+                test: cssRegex,
                 // 使用 'style-loader','css-loader'
                 use:[
                     {
@@ -58,7 +59,8 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|svg|jpg|gif|jpeg)$/, use:
+                test: imageRegex, 
+                use:
                 [{
                     loader: 'url-loader',
                     options: {
@@ -70,7 +72,8 @@ module.exports = {
                 }]
             },
             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/, use:
+                test: fontRegex, 
+                use:
                 [{
                     loader: 'file-loader',
                     options: {
@@ -83,7 +86,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: 'public/index.html',
+            template: templPath,
             inject: 'body',
             minify: {
                 html5: true
@@ -94,7 +97,7 @@ module.exports = {
     ],
     devServer: {
         port: '8080',
-        contentBase: path.join(__dirname, '../public'),
+        contentBase: publicPath,
         compress: true,
         historyApiFallback: true,
         inline:true,
