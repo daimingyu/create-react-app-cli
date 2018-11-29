@@ -11,7 +11,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin'); // copy
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const path = require('path');
 const { root, entryPath, buildPath, templPath, publicPath, jsRegex, cssRegex, imageRegex, fontRegex } = require('./webpack.config.variable.js');
 
 module.exports = {

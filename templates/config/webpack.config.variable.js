@@ -11,13 +11,13 @@ const publicPath = path.resolve(root,'public');
 const entryPath = path.resolve(srcPath,'index.js');
 //html模板文件位置
 const templPath = path.resolve(publicPath,'index.html');
-//js 正则规则
+//js 正则
 const jsRegex = /\.(js|jsx)?$/;
-//css 正则规则
+//css 正则
 const cssRegex = /\.css$/;
-//image 正则规则
+//image 正则
 const imageRegex = /\.(png|svg|jpg|gif|jpeg)$/;
-//font 正则规则
+//font 正则
 const fontRegex = /\.(woff|woff2|eot|ttf|otf)$/;
 module.exports = {
     root,

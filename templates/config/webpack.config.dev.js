@@ -4,7 +4,6 @@
  * @time 2018/3/8
  * @author **
  */
-const path = require('path');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');

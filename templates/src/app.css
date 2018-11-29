@@ -1,0 +1,38 @@
+body{    
+	max-width: 640px;
+	margin: 100px auto 100px auto;
+}
+html, body {
+	font-weight: 400;
+    font: 14px/1.5 Menlo, Consolas, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;;
+    line-height: 18px;
+    background-color: #161616;
+    color: #cccccc;
+}
+ul.topNav{
+	list-style-type: none;
+	margin: 0px 20px 0px 20px;
+	padding: 0px;
+}
+ul.topNav li {
+	display: inline-block;
+	margin-right: 10px;
+}
+ul.topNav li a{
+	background: transparent;
+    color: #ffffff;
+    text-decoration: none;
+}
+ul.topNav li:hover a{
+	background-color: #ffffff;
+	color: #000000;
+}
+.content{
+	margin: 0px 20px 0px 20px;
+}
+.content h1{
+	font-size: 1.5em;
+}
+#description, #project, #file, #about{
+	color: #ffffff;
+}
